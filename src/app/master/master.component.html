@@ -1,0 +1,87 @@
+<nz-layout class="p-3">
+  <div class="row mt-3">
+    <div class="col-md-10 col-4xl-8 col-5xl-6 mx-auto">
+      <nz-header class="d-flex align-items-center bg-transparent px-md-2 px-0 mx-md-1 mx-0">
+        <img
+          src="../../assets/logo.png"
+          class="logo mr-3 mr-xl-5 cursor-pointer d-md-block d-none"
+          [routerLink]="['/dashboard']"
+        />
+
+        <nz-input-group [nzSuffix]="search" class="mx-lg-5 mx-md-3">
+          <ng-template #search>
+            <i class="fas fa-search"></i>
+          </ng-template>
+
+          <input
+            id="searchInput"
+            nz-input
+            [(ngModel)]="query"
+            (ngModelChange)="onSearch()"
+            [placeholder]="'Search'"
+            [nzAutocomplete]="auto"
+          />
+          <nz-autocomplete #auto>
+            <ng-container *ngIf="!isSearching">
+              <nz-auto-option
+                *ngFor="let item of searchResults"
+                [nzLabel]="item.title"
+                [nzValue]="item.title"
+                (click)="toNote(item)"
+              >
+                <div class="search">
+                  <div>
+                    <span class="search__folder"
+                      >In "<span [ngStyle]="{ color: item?.folder?.color }">{{
+                        item?.folder?.name
+                      }}</span
+                      >" folder</span
+                    >
+                  </div>
+                  <div>
+                    <span class="search__title">
+                      {{ item.title }}
+                    </span>
+
+                    <span
+                      *ngIf="item?.updatedAt || item?.createdAt"
+                      class="search__lastUpdate d-md-block d-none"
+                      >Last updated at
+                      {{
+                        (item.updatedAt | date: "dd MMM yyyy HH:mm") ||
+                          (item.createdAt | date: "dd MMM yyyy HH:mm")
+                      }}</span>
+                  </div>
+                </div>
+              </nz-auto-option>
+            </ng-container>
+
+            <nz-auto-option *ngIf="isSearching" class="text-secondary">
+              <i class="fas fa-spinner fa-pulse mr-2"></i>
+              Loading
+            </nz-auto-option>
+          </nz-autocomplete>
+        </nz-input-group>
+
+        <button nz-button nzType="text" class="ml-3 d-md-block d-none" [routerLink]="['../']">
+          Folders
+        </button>
+
+        <div class="d-flex align-items-center ml-md-5">
+          <ng-container *ngIf="user$ | async as user">
+            <nz-avatar
+              [nzSrc]="api + user.avatar.url"
+              class="mr-2 d-md-block d-none"
+              nzSize="large"
+            ></nz-avatar>
+          </ng-container>
+        </div>
+      </nz-header>
+
+      <nz-content class="p-md-2 m-1">
+        <router-outlet></router-outlet>
+        <app-loading></app-loading>
+      </nz-content>
+    </div>
+  </div>
+</nz-layout>

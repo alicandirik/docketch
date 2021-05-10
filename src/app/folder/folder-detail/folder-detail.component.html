@@ -1,0 +1,110 @@
+<app-drawer
+  [visible]="visible"
+  (onClose)="close()"
+  [title]="folderId ? 'Edit Folder' : 'Create Folder'"
+>
+  <div class="row">
+    <div class="col-xl-8 col-lg-7">
+      <form
+        nz-form
+        nzLayout="vertical"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+      >
+        <nz-form-item>
+          <nz-form-label>Name</nz-form-label>
+          <nz-form-control nzErrorTip="Cannot be longer than 50 characters">
+            <input
+              nz-input
+              formControlName="name"
+              placeholder="Title of folder"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Color</nz-form-label>
+          <nz-form-control>
+            <div class="d-flex flex-wrarp">
+              <div
+                *ngFor="let color of colors; let i = index"
+                class="color-box"
+                [class.color-box__selected]="form.get('color')?.value === color"
+                (click)="onSelectColor(color)"
+                [ngClass]="'color-box__' + (i + 1)"
+              ></div>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Description</nz-form-label>
+          <nz-form-control nzErrorTip="Cannot be longer than 200 characters">
+            <textarea
+              nz-input
+              formControlName="description"
+              placeholder="Max 200 characters"
+              [nzAutosize]="{ minRows: 2, maxRows: 7 }"
+            ></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="row">
+          <div class="col-6">
+            <button nz-button [disabled]="!form.valid">
+              <i class="fas fa-angle-right mr-2"></i>
+              Submit
+            </button>
+          </div>
+
+          <div class="col-6 text-right">
+            <button
+              nz-button
+              nzType="text"
+              type="button"
+              [disabled]="isCreating"
+              nzDanger
+              (click)="onDelete(folder)"
+            >
+              <span *ngIf="!isDeleting"> Delete </span>
+
+              <span *ngIf="isDeleting">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+
+                Click to confirm
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-5 col-xl-4 d-none d-md-block">
+      <h6>Preview</h6>
+      <div
+        class="card folder-card__preview"
+        [ngStyle]="{
+          'border-top':
+            '.375rem solid ' + (form.get('color')?.value || '#e89a3c')
+        }"
+      >
+        <div class="card-header">
+          <h6 class="mb-0">{{ form.get("name")?.value || "Name" }}</h6>
+
+          <div class="text-secondary">0 notes</div>
+        </div>
+
+        <div class="card-body my-3 text-secondary">
+          {{
+            form.get("description")?.value ||
+              "This is description section which is cannot be longer than 200 characters"
+          }}
+        </div>
+
+        <div class="card-footer text-secondary text-right">
+          {{ date | date: "dd MMM yyyy HH:mm" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</app-drawer>

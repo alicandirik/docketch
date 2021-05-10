@@ -1,0 +1,13 @@
+<nz-drawer
+  nzClosable
+  [nzHeight]="'85%'"
+  [nzTitle]="title"
+  [nzVisible]="visible"
+  nzPlacement="bottom"
+  (nzOnClose)="close()"
+  [nzWrapClassName]="'d-flex justify-content-center'"
+>
+  <ng-container *nzDrawerContent>
+    <ng-content></ng-content>
+  </ng-container>
+</nz-drawer>

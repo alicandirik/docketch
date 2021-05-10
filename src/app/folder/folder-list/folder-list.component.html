@@ -1,0 +1,79 @@
+<ng-container *ngIf="!(isLoading$ | async)">
+  <ng-container *ngIf="folders$ | async as folders">
+    <ng-container *ngIf="folders.length > 0; else empty">
+      <div class="mt-3 row">
+        <div
+          class="col-md-4 col-lg-3 my-3 px-2"
+          *ngFor="let folder of folders"
+          (contextmenu)="contextMenu($event, menu)"
+        >
+          <div
+            class="card folder-card"
+            [ngStyle]="{ 'border-top': '.375rem solid ' + folder.color }"
+          >
+            <div class="card-header">
+              <div class="w-100 d-flex flex-wrap">
+                <h6 class="mb-0 w-75 flex-fill" (click)="toNote(folder)">{{ folder.name }}</h6>
+  
+                <a
+                  class="flex-fill w-25 text-right"
+                  nz-dropdown
+                  [nzDropdownMenu]="menu"
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                >
+                  <i class="text-secondary fas fa-ellipsis-v"></i>
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item (click)="onEdit(folder)">Edit</li>
+                    <li nz-menu-item nzDanger (click)="onDelete(folder)">
+                      Delete
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+  
+              <div class="text-secondary" (click)="toNote(folder)">
+                {{ folder?.notes?.length || 0 }} notes
+              </div>
+            </div>
+  
+            <div class="card-body my-3 text-secondary" (click)="toNote(folder)">
+              {{ folder.description }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  
+    <ng-template #empty>
+      <div class="py-5 my-5 text-secondary text-center">
+        <div class="mb-2">
+          <i class="far fa-folder-open fa-lg"></i>
+        </div>
+  
+        No Folder
+      </div>
+    </ng-template>
+  </ng-container>
+</ng-container>
+
+<nz-back-top
+  [nzTemplate]="newButton"
+  (nzClick)="showDetail = true"
+  [nzVisibilityHeight]="-1"
+>
+  <ng-template #newButton>
+    <div class="ant-back-top-inner" style="background: #7b2929">
+      <i class="fas fa-plus"></i>
+    </div>
+  </ng-template>
+</nz-back-top>
+
+<app-folder-detail
+  [title]="selectedFolderId ? 'Edit Folder' : 'Create Folder'"
+  [folderId]="selectedFolderId"
+  (onClose)="onDrawerClose()"
+  [visible]="showDetail"
+></app-folder-detail>

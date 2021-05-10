@@ -1,0 +1,38 @@
+:host ::ng-deep .ant-back-top-inner {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  border-radius: 4px;
+  background-color: #7b2929;
+  text-align: center;
+  font-size: 20px;
+
+  &:hover {
+    background-color: #af3a3a !important;
+  }
+}
+
+.note-card__preview {
+  background-color: #181c27;
+  border-radius: 4px;
+  padding: 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #232939;
+  }
+
+  .card-header {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .card-body {
+    flex: 1 1 auto;
+    width: 100%;
+    overflow: scroll;
+    word-break: break-word;
+    height: 27.5rem;
+  }
+}

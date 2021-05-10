@@ -1,0 +1,101 @@
+<app-drawer
+  [visible]="visible"
+  (onClose)="close()"
+  [title]="noteId ? 'Edit Note' : 'Create Note'"
+>
+  <ng-container *ngIf="!(isLoading$ | async); else loading">
+    <form
+      nz-form
+      [formGroup]="form"
+      nzLayout="vertical"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="row">
+        <div class="col-6">
+          <nz-form-item>
+            <nz-form-label>Title</nz-form-label>
+
+            <nz-form-control>
+              <input nz-input formControlName="title" placeholder="Title" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="col-6">
+          <nz-form-item>
+            <nz-form-label>Folder</nz-form-label>
+            <nz-form-control>
+              <nz-select
+                formControlName="folder"
+                [compareWith]="compareFn"
+                [nzDisabled]="isCreating"
+              >
+                <nz-option
+                  *ngFor="let folder of folders$ | async"
+                  [nzLabel]="folder.name"
+                  [nzValue]="folder"
+                ></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <nz-form-item>
+        <nz-form-label>Color</nz-form-label>
+
+        <nz-form-control>
+          <div class="d-flex flex-wrap">
+            <div
+              *ngFor="let color of colors; let i = index"
+              class="color-box"
+              [class.color-box__selected]="form.get('color')?.value === color"
+              (click)="onSelectColor(color)"
+              [ngClass]="'color-box__' + (i + 1)"
+            ></div>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Description</nz-form-label>
+
+        <nz-form-control>
+          <textarea nz-input formControlName="description" rows="18"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <div class="row">
+        <div class="col-6">
+          <button nz-button type="submit">
+            <i class="fas fa-angle-right mr-2"></i>
+            {{ noteId ? "Update" : "Submit" }}
+          </button>
+        </div>
+
+        <div class="col-6 text-right">
+          <button
+            nz-button
+            nzType="text"
+            type="button"
+            [disabled]="isCreating"
+            nzDanger
+            (click)="onDelete(note)"
+          >
+            <span *ngIf="!isDeleting"> Delete </span>
+
+            <span *ngIf="isDeleting">
+              <i class="fas fa-exclamation-circle mr-2"></i>
+
+              Click to confirm
+            </span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-template #loading>
+    <app-loading></app-loading>
+  </ng-template>
+</app-drawer>

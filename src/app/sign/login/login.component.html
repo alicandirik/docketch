@@ -1,0 +1,97 @@
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <div class="col-lg-4 col-6 d-flex flex-wrap m-auto">
+      <div class="flex-fill w-100">
+        <nz-card [nzActions]="[]" [nzTitle]="title" nzBorderless>
+          <ng-template #title>
+            <div class="text-center">
+              <img
+                nz-image
+                [nzSrc]="'../../../assets/logo.png'"
+                alt="application logo dockerketch"
+                class="logo"
+                width="64px"
+              />
+            </div>
+          </ng-template>
+          <form nz-form [formGroup]="form" nzLayout="vertical">
+            <nz-form-item>
+              <nz-form-label nzRequired>{{ LABELS.email }}</nz-form-label>
+
+              <nz-form-control [nzErrorTip]="errorTemplate">
+                <input
+                  nz-input
+                  [formControlName]="FORM_PARAMS.email"
+                  [placeholder]="LABELS.emailPlaceholder"
+                />
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzRequired>{{ LABELS.password }}</nz-form-label>
+
+              <nz-form-control [nzErrorTip]="errorTemplate">
+                <nz-input-group [nzSuffix]="suffixTemplate">
+                  <input
+                    [type]="passwordVisible ? 'text' : 'password'"
+                    nz-input
+                    [formControlName]="FORM_PARAMS.password"
+                    [placeholder]="LABELS.passwordPlaceholder"
+                  />
+                </nz-input-group>
+                <ng-template #suffixTemplate>
+                  <i
+                    [ngClass]="
+                      passwordVisible ? 'fas fa-eye' : 'fas fa-eye-slash'
+                    "
+                    (click)="passwordVisible = !passwordVisible"
+                  ></i>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control>
+                <button
+                  nz-button
+                  nzBlock
+                  [nzLoading]="isLoading"
+                  [disabled]="form.invalid"
+                  (click)="onSignIn()"
+                  nzType="primary"
+                >
+                  {{ LABELS["sign-in"] }}
+                </button>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+
+          <!-- <ng-template #action>
+            <button
+              nz-button
+              [routerLink]="['../register']"
+              nzType="link"
+              nzBlock
+            >
+              {{ LABELS.register }}
+            </button>
+          </ng-template> -->
+        </nz-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #errorTemplate let-control>
+  <ng-container *ngIf="control.hasError('required')">
+    {{ LABELS.required }}
+  </ng-container>
+
+  <ng-container *ngIf="control.hasError('minlength')">
+    {{ LABELS.must8characters }}
+  </ng-container>
+
+  <ng-container *ngIf="control.hasError('email')">
+    {{ LABELS.invalidEmailFormat }}
+  </ng-container>
+</ng-template>

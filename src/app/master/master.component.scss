@@ -1,0 +1,19 @@
+.logo {
+  width: 10%;
+}
+
+.search {
+  .search__folder {
+    color: #646464;
+  }
+
+  .search__title {
+    font-size: 1rem;
+  }
+
+  .search__lastUpdate {
+    position: absolute;
+    right: 16px;
+    color: #646464;
+  }
+}

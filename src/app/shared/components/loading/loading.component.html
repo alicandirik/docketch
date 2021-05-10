@@ -1,0 +1,11 @@
+<nz-spin
+  nzSimple
+  [nzIndicator]="template"
+  [nzSpinning]="isLoading$ | async"
+  [nzSize]="'large'"
+></nz-spin>
+<ng-template #template>
+  <div class="loading-container">
+    <i nz-icon nzType="loading" style="color: #7b2929; font-size: 32px"></i>
+  </div>
+</ng-template>

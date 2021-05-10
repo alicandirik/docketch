@@ -1,0 +1,97 @@
+<ng-container *ngIf="!(isLoading$ | async)">
+  <ng-container *ngIf="current$ | async as current">
+    <nz-page-header [nzTitle]="current.name" class="p-0">
+      <nz-page-header-content class="pt-0">
+        <div class="text-secondary">{{ current.description }}</div>
+
+        <ng-container *ngIf="notes?.length === 0; else content">
+          <div class="py-5 my-5 text-secondary text-center">
+            <div class="mb-2">
+              <i class="far fa-folder-open fa-lg"></i>
+            </div>
+            No Note
+          </div>
+        </ng-container>
+
+        <ng-template #content>
+          <div class="mt-5 row">
+            <div
+              class="col-md-6"
+              *ngFor="let note of notes"
+              (contextmenu)="contextMenu($event, menu)"
+            >
+              <div
+                class="card note-card mt-3"
+                (click)="onSelectNote(note.id)"
+                [ngStyle]="{ 'border-top': '.375rem solid ' + note.color }"
+              >
+                <div class="card-header">
+                  <div class="d-flex flex-wrap">
+                    <div class="flex-fill w-50">
+                      <h6 class="mb-0">{{ note.title }}</h6>
+                    </div>
+
+                    <div class="flex-fill w-50 text-right text-secondary">
+                      {{
+                        (note.updatedAt | date: "dd MMM yyyy HH:mm") ||
+                          (note.createdAt | date: "dd MMM yyyy HH:mm")
+                      }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-body my-3 text-secondary">
+                  <markdown [data]="note.description"></markdown>
+                </div>
+              </div>
+
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-submenu nzTitle="Move to another folder">
+                    <ul>
+                      <li
+                        nz-menu-item
+                        *ngFor="let folder of folders"
+                        (click)="onMove(note, folder)"
+                        [nzDisabled]="folder.id === folderId"
+                      >
+                        {{ folder.name }}
+                        <span *ngIf="folder.id === folderId"
+                          >(Already in this folder)</span
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li nz-menu-item nzDanger (click)="onDelete(note)">Delete</li>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          </div>
+        </ng-template>
+      </nz-page-header-content>
+    </nz-page-header>
+  </ng-container>
+</ng-container>
+
+<nz-back-top
+  [nzTemplate]="newButton"
+  (nzClick)="showDetail = true"
+  [nzVisibilityHeight]="-1"
+>
+  <ng-template #newButton>
+    <div class="ant-back-top-inner" style="background: #7b2929">
+      <i class="fas fa-plus"></i>
+    </div>
+  </ng-template>
+</nz-back-top>
+
+<app-note-detail
+  [title]="selectedNoteId ? 'Edit Note' : 'New Note'"
+  [noteId]="selectedNoteId"
+  (onClose)="onDrawerClose()"
+  [visible]="showDetail"
+></app-note-detail>
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
