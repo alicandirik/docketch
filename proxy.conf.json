@@ -1,6 +1,6 @@
 {
     "/server": {
-      "target": "http://localhost:1337/",
+      "target": "https://docketch-strapi.herokuapp.com/",
       "secure": false,
       "changeOrigin": true,
       "logLevel": "debug",
